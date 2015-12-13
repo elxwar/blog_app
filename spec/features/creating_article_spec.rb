@@ -1,32 +1,19 @@
 require 'rails_helper'
 
-RSpec.feature 'Creating Articles' do
-  scenario 'A user creates a new article' do
-    visit '/'
+RSpec.feature 'Showing an Article' do
 
-    click_link 'New Article'
-
-    fill_in 'Title', with: 'Creating first article'
-    fill_in 'Body', with: 'Lorem Ipsum'
-    click_button 'Create Article'
-
-    expect(page).to have_content('Article has been created')
-    expect(page.current_path).to eq(articles_path)
+  before do
+    @article = Article.create(title: 'The first article', body: 'Body of the first article')
   end
 
-  scenario 'A user fails to create a new article' do
+  scenario 'Display individual article' do
     visit '/'
 
-    click_link 'New Article'
+    click_link @article.title
 
-    fill_in 'Title', with: ''
-    fill_in 'Body', with: ''
-    click_button 'Create Article'
-
-    expect(page).to have_content('Article has not been created')
-    expect(page).to have_content('Title must not be blank')
-    expect(page).to have_content('Body must not be blank')
-
+    expect(page).to have_content(@article.title)
+    expect(page).to have_content(@article.body)
+    expect(page.current_path).to eq(article_path(@article))
   end
 
 end
